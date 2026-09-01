@@ -229,7 +229,7 @@ const terrainAt = (q: number, r: number): string => {
 
 export const crown14MapProvider: MapProvider = {
     key: 'crown14',
-    name: 'Crown (14x14)',
+    name: '왕관 (14x14)',
     rows: ROWS,
     cols: COLS,
     randomRoads: 0,

@@ -233,7 +233,7 @@ function depotPadHeights(): Map<string, number> {
 
 export const rotor12x18MapProvider: MapProvider = {
     key: 'rotor12x18',
-    name: 'Half Turn (12x18)',
+    name: '반바퀴 (12x18)',
     rows: ROWS,
     cols: COLS,
     randomRoads: 0,

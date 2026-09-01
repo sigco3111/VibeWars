@@ -149,11 +149,11 @@ function portraitFor(type: string, playerIndex: number): string | null {
 function effectSummary(skill: SkillDef): string {
     const effect = skill.effect as any;
     switch (effect.kind) {
-        case 'repair': return `Restores ${effect.hp} HP`;
-        case 'load': return 'Picks up an ally';
-        case 'unload': return 'Sets its passenger down';
-        case 'startFire': return `Sets the ground alight for ${effect.turns} turns`;
-        case 'attack': return `${effect.minDamage}-${effect.maxDamage} damage`;
+        case 'repair': return `HP를 ${effect.hp} 회복`;
+        case 'load': return '아군을 태웁니다';
+        case 'unload': return '승객을 내려줍니다';
+        case 'startFire': return `지면을 ${effect.turns}턴 동안 불태웁니다`;
+        case 'attack': return `데미지 ${effect.minDamage}~${effect.maxDamage}`;
         default: return skill.name;
     }
 }
@@ -171,7 +171,7 @@ function build(): HTMLElement {
         <div class="unit-info-skills"></div>
         <div class="unit-info-body">
             <dl class="unit-info-stats"></dl>
-            <div class="unit-info-vs-label">VERSUS</div>
+            <div class="unit-info-vs-label">상성</div>
             <div class="unit-info-vs"></div>
         </div>`;
     document.body.appendChild(panel);
@@ -211,7 +211,7 @@ class UnitInfoPanel {
         const owner = panel.querySelector('.unit-info-owner') as HTMLElement;
         const state = getGameStateOrNull();
         const mine = state ? state.isPlayerTurn(unit.playerIndex) : false;
-        owner.textContent = mine ? 'ACTIVE SIDE' : '';
+        owner.textContent = mine ? '현재 턴' : '';
         owner.style.color = colour;
 
         (panel.querySelector('.unit-info-class') as HTMLElement).textContent =
@@ -219,16 +219,16 @@ class UnitInfoPanel {
 
         const range = config.minRange === config.maxRange
             ? `${config.maxRange}`
-            : `${config.minRange}–${config.maxRange}`;
+            : `${config.minRange}~${config.maxRange}`;
         const rows: [string, string][] = [
-            ['HP', `${unit.hp} / ${unit.maxHp}`],
-            ['Attack', `${config.attack ?? '—'}`],
-            ['Damage', `${config.minDamage ?? '—'}–${config.maxDamage ?? '—'}`],
-            ['Range', range],
-            ['Move', `${unit.move} / ${config.move ?? '—'}`],
+            ['체력', `${unit.hp} / ${unit.maxHp}`],
+            ['명중률', `${config.attack ?? '—'}`],
+            ['데미지', `${config.minDamage ?? '—'}~${config.maxDamage ?? '—'}`],
+            ['사거리', range],
+            ['이동력', `${unit.move} / ${config.move ?? '—'}`],
         ];
-        if (config.flightAltitude) rows.push(['Flies', 'yes']);
-        if (config.canCapture) rows.push(['Captures', 'yes']);
+        if (config.flightAltitude) rows.push(['비행', '예']);
+        if (config.canCapture) rows.push(['점령', '가능']);
 
         const stats = panel.querySelector('.unit-info-stats') as HTMLElement;
         stats.innerHTML = rows
@@ -257,20 +257,20 @@ class UnitInfoPanel {
         const skills = panel.querySelector('.unit-info-skills') as HTMLElement;
         panel.classList.toggle('has-skills', extras.length > 0);
         skills.innerHTML = extras.length === 0 ? '' :
-            `<div class="unit-info-vs-label">SPECIAL</div>` + extras.map((skill) => {
+            `<div class="unit-info-vs-label">특수</div>` + extras.map((skill) => {
                 const turnsLeft = unit.cooldowns?.[skill.id] ?? 0;
                 const ready = isReady(unit.cooldowns, skill.id);
                 const range = skill.minRange === skill.maxRange
-                    ? `${skill.maxRange}` : `${skill.minRange}-${skill.maxRange}`;
+                    ? `${skill.maxRange}` : `${skill.minRange}~${skill.maxRange}`;
                 const meta = [
-                    `range ${range}`,
-                    skill.cooldown > 0 ? `cooldown ${skill.cooldown}` : 'every turn',
+                    `사거리 ${range}`,
+                    skill.cooldown > 0 ? `재사용 대기 ${skill.cooldown}턴` : '매 턴 사용 가능',
                 ];
-                if (skill.spendsAction) meta.push('spends action');
+                if (skill.spendsAction) meta.push('행동 소모');
                 return `<div class="unit-skill ${ready ? '' : 'is-cooling'}">
                     <div class="unit-skill-head"><span class="unit-skill-glyph">${skill.glyph}</span>
                     <span class="unit-skill-name">${skill.name}</span>
-                    <span class="unit-skill-state">${ready ? 'READY' : turnsLeft + 'T'}</span></div>
+                    <span class="unit-skill-state">${ready ? '사용 가능' : turnsLeft + '턴'}</span></div>
                     <div class="unit-skill-what">${effectSummary(skill)}</div>
                     <div class="unit-skill-meta">${meta.join(' &middot; ')}</div>
                 </div>`;

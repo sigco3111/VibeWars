@@ -100,7 +100,7 @@ const asSpawns = (r: number): StartingUnit[] =>
 
 export const mirror8MapProvider: MapProvider = {
     key: 'mirror8',
-    name: 'Twin Ridge (8x8)',
+    name: '쌍둥이 능선 (8x8)',
     rows: ROWS,
     cols: COLS,
     randomRoads: 0,

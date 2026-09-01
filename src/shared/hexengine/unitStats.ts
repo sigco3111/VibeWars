@@ -20,7 +20,7 @@ import type { UnitTypeConfig } from '../../types';
 export const UNIT_TYPES = {
         "Road": {
             symbol: "E",
-            name: "Road",
+            name: "로드",
             unitClass: 'infantry' as const,
             maxHp: 2,
             hp: 2,
@@ -50,7 +50,7 @@ export const UNIT_TYPES = {
         },
         "Gunboat": {
             symbol: "O",
-            name: "Gunboat",
+            name: "구급함",
             unitClass: 'naval' as const,
             maxHp: 10,
             hp: 10,
@@ -82,7 +82,7 @@ export const UNIT_TYPES = {
         },
         "AttackBoat": {
             symbol: "M",
-            name: "Attack Boat",
+            name: "공격정",
             unitClass: 'naval' as const,
             // Fast, lightly armoured coastal striker. The old Gunboat stays
             // the slower heavy hull; this is a separate tactical unit.
@@ -117,7 +117,7 @@ export const UNIT_TYPES = {
         },
         "Bulwark": {
             symbol: "O",
-            name: "Bulwark",
+            name: "방패",
             unitClass: 'tank' as const,
             maxHp: 10,
             hp: 10,
@@ -150,7 +150,7 @@ export const UNIT_TYPES = {
         },
         "Kestrel": {
             symbol: "O",
-            name: "Kestrel",
+            name: "케스트럴",
             unitClass: 'artillery' as const,
             // Glass cannon: huge indirect firepower, but dies to almost
             // anything that reaches it -- closing in on artillery must pay.
@@ -195,7 +195,7 @@ export const UNIT_TYPES = {
         },
         "Sabre": {
             symbol: "O",
-            name: "Sabre",
+            name: "세이버",
             unitClass: 'tank' as const,
             maxHp: 5,
             hp: 5,
@@ -228,7 +228,7 @@ export const UNIT_TYPES = {
         },
         "Pike": {
             symbol: "E",
-            name: "Pike",
+            name: "파이크",
             unitClass: 'infantry' as const,
             canCapture: true,  // the ONLY unit type that can capture buildings
             maxHp: 4,
@@ -266,7 +266,7 @@ export const UNIT_TYPES = {
         },
         "Drover": {
             symbol: "A",
-            name: "Drover",
+            name: "드라버",
             unitClass: 'tank' as const,
             maxHp: 6,
             hp: 6,
@@ -305,7 +305,7 @@ export const UNIT_TYPES = {
         },
         "Halberd": {
             symbol: "H",
-            name: "Halberd",
+            name: "할버드",
             unitClass: 'aa' as const,
             maxHp: 8,
             hp: 8,
@@ -349,7 +349,7 @@ export const UNIT_TYPES = {
         },
         "Lynx": {
             symbol: "L",
-            name: "Lynx",
+            name: "링스",
             unitClass: 'tank' as const,
             maxHp: 5,
             hp: 5,
@@ -382,7 +382,7 @@ export const UNIT_TYPES = {
         },
         "Nightjar": {
             symbol: "N",
-            name: "Nightjar",
+            name: "나이트자",
             unitClass: 'air' as const,
             maxHp: 6,
             hp: 6,
@@ -433,7 +433,7 @@ export const UNIT_TYPES = {
         },
         "Shrike": {
             symbol: "S",
-            name: "Shrike",
+            name: "슈라이크",
             unitClass: 'air' as const,
             maxHp: 4,  // fragile, hit-and-run
             hp: 4,
@@ -480,7 +480,7 @@ export const UNIT_TYPES = {
         // --- tinted, and no regular map spawns them.
         "Kloss": {
             symbol: "K",
-            name: "Kloss",
+            name: "클로스",
             unitClass: 'tank' as const,
             // Almost pure architecture: nearly cannot die, and deals a
             // TOKEN 1 -- zero damage left the search nothing to resolve
@@ -516,7 +516,7 @@ export const UNIT_TYPES = {
         },
         "Pyramid": {
             symbol: "A",
-            name: "Pyramid",
+            name: "피라미드",
             unitClass: 'artillery' as const,
             // The crown jewel: lose it and the match is OVER, hard rule.
             vital: true,
@@ -551,7 +551,7 @@ export const UNIT_TYPES = {
         },
         "Boll": {
             symbol: "B",
-            name: "Boll",
+            name: "볼",
             unitClass: 'tank' as const,
             maxHp: 14,
             hp: 14,

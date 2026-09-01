@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="sv">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#172019">
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%23a8c66c' d='M16 2 5 18h7l-5 7h7v5h4v-5h7l-5-7h7z'/%3E%3C/svg%3E">
-    <title>Vibe Wars — Trädstudie</title>
+    <title>Vibe Wars — 나무 모델 연구소</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap');
 
@@ -233,105 +233,105 @@
     </style>
 </head>
 <body>
-    <main id="viewer" aria-label="Interaktiv 3D-visning av lövträd"></main>
+    <main id="viewer" aria-label="활엽수 3D 인터랙티브 뷰어"></main>
 
     <header class="topbar">
         <div class="brand">
-            <h1>Trädstudie</h1>
-            <span class="eyebrow">Vibe Wars · modellverkstad</span>
+            <h1>나무 모델 연구소</h1>
+            <span class="eyebrow">Vibe Wars · 모델 작업장</span>
         </div>
-        <div class="status"><i class="status-dot"></i><span>Renderare aktiv</span></div>
+        <div class="status"><i class="status-dot"></i><span>렌더러 가동 중</span></div>
     </header>
 
-    <aside class="catalog" aria-label="Trädmodeller">
-        <div class="catalog-head"><span class="label">Modeller</span><span id="preset-count" class="count">01 / 04</span></div>
-        <div class="tree-list" role="list" aria-label="Trädpresets">
+    <aside class="catalog" aria-label="나무 모델 목록">
+        <div class="catalog-head"><span class="label">모델</span><span id="preset-count" class="count">01 / 04</span></div>
+        <div class="tree-list" role="list" aria-label="나무 프리셋">
             <button class="tree-card is-active" type="button" data-preset="broadleaf-standard" aria-pressed="true" role="listitem">
                 <i class="swatch"></i>
-                <strong>Lövträd · Standard</strong>
+                <strong>활엽수 · 표준</strong>
                 <span>ProceduralDecorations</span>
             </button>
             <button class="tree-card" type="button" data-preset="spruce" aria-pressed="false" role="listitem">
                 <i class="swatch"></i>
-                <strong>Gran</strong>
+                <strong>가문비나무</strong>
                 <span>ProceduralDecorations</span>
             </button>
             <button class="tree-card" type="button" data-preset="pine" aria-pressed="false" role="listitem">
                 <i class="swatch"></i>
-                <strong>Tall</strong>
+                <strong>소나무</strong>
                 <span>ProceduralDecorations</span>
             </button>
             <button class="tree-card" type="button" data-preset="birch" aria-pressed="false" role="listitem">
                 <i class="swatch"></i>
-                <strong>Björk</strong>
+                <strong>자작나무</strong>
                 <span>ProceduralDecorations</span>
             </button>
         </div>
         <dl class="details">
-            <dt>Typ</dt><dd>Procedurgenererad</dd>
-            <dt>Källa</dt><dd>Spelets skogssystem</dd>
-            <dt>Variant</dt><dd id="preset-variant">Lövträd #05</dd>
-            <dt>Vind</dt><dd>Aktiv</dd>
+            <dt>유형</dt><dd>절차 생성</dd>
+            <dt>출처</dt><dd>게임의 숲 시스템</dd>
+            <dt>변형</dt><dd id="preset-variant">활엽수 #05</dd>
+            <dt>바람</dt><dd>활성</dd>
         </dl>
-        <section class="parameters" aria-label="Trädparametrar">
-            <span class="label">Generator</span>
-            <div class="parameter-group"><span class="parameter-group-title">Grenar</span>
-                <label class="parameter"><span class="parameter-head"><span>Grenar per förgrening</span><output id="branch-count-per-fork-value">3</output></span><input id="branch-count-per-fork" type="range" min="2" max="5" step="1" value="3"></label>
-                <label class="parameter"><span class="parameter-head"><span>Nivåer</span><output id="branch-levels-value">2</output></span><input id="branch-levels" type="range" min="1" max="4" step="1" value="2"></label>
-                <label class="parameter"><span class="parameter-head"><span>Startlängd</span><output id="branch-start-length-ratio-value">38%</output></span><input id="branch-start-length-ratio" type="range" min="5" max="75" step="1" value="38"></label>
-                <label class="parameter"><span class="parameter-head"><span>Längdfaktor per stamnivå</span><output id="branch-length-ratio-per-trunk-level-value">75%</output></span><input id="branch-length-ratio-per-trunk-level" type="range" min="0" max="100" step="5" value="75"></label>
-                <label class="parameter"><span class="parameter-head"><span>Längdfaktor per grennivå</span><output id="branch-child-length-ratio-value">75%</output></span><input id="branch-child-length-ratio" type="range" min="0" max="100" step="5" value="75"></label>
-                <label class="parameter"><span class="parameter-head"><span>Tjockleksfaktor per nivå</span><output id="branch-child-radius-ratio-value">73%</output></span><input id="branch-child-radius-ratio" type="range" min="20" max="90" step="1" value="73"></label>
-                <label class="parameter"><span class="parameter-head"><span>Gravitation</span><output id="branch-gravity-strength-value">300%</output></span><input id="branch-gravity-strength" type="range" min="0" max="300" step="1" value="300"></label>
+        <section class="parameters" aria-label="나무 파라미터">
+            <span class="label">생성기</span>
+            <div class="parameter-group"><span class="parameter-group-title">가지</span>
+                <label class="parameter"><span class="parameter-head"><span>분기당 가지 수</span><output id="branch-count-per-fork-value">3</output></span><input id="branch-count-per-fork" type="range" min="2" max="5" step="1" value="3"></label>
+                <label class="parameter"><span class="parameter-head"><span>가지 단계</span><output id="branch-levels-value">2</output></span><input id="branch-levels" type="range" min="1" max="4" step="1" value="2"></label>
+                <label class="parameter"><span class="parameter-head"><span>시작 길이 비율</span><output id="branch-start-length-ratio-value">38%</output></span><input id="branch-start-length-ratio" type="range" min="5" max="75" step="1" value="38"></label>
+                <label class="parameter"><span class="parameter-head"><span>줄기 단계당 길이 비율</span><output id="branch-length-ratio-per-trunk-level-value">75%</output></span><input id="branch-length-ratio-per-trunk-level" type="range" min="0" max="100" step="5" value="75"></label>
+                <label class="parameter"><span class="parameter-head"><span>가지 단계당 길이 비율</span><output id="branch-child-length-ratio-value">75%</output></span><input id="branch-child-length-ratio" type="range" min="0" max="100" step="5" value="75"></label>
+                <label class="parameter"><span class="parameter-head"><span>단계당 굵기 비율</span><output id="branch-child-radius-ratio-value">73%</output></span><input id="branch-child-radius-ratio" type="range" min="20" max="90" step="1" value="73"></label>
+                <label class="parameter"><span class="parameter-head"><span>중력 강도</span><output id="branch-gravity-strength-value">300%</output></span><input id="branch-gravity-strength" type="range" min="0" max="300" step="1" value="300"></label>
             </div>
-            <div class="parameter-group"><span class="parameter-group-title">Stam</span>
-                <label class="parameter"><span class="parameter-head"><span>Nivåer</span><output id="trunk-levels-value">3</output></span><input id="trunk-levels" type="range" min="1" max="6" step="1" value="3"></label>
-                <label class="parameter"><span class="parameter-head"><span>Startlängd</span><output id="trunk-base-length-ratio-value">50%</output></span><input id="trunk-base-length-ratio" type="range" min="25" max="125" step="1" value="50"></label>
-                <label class="parameter"><span class="parameter-head"><span>Längdfaktor per nivå</span><output id="trunk-child-length-ratio-value">75%</output></span><input id="trunk-child-length-ratio" type="range" min="35" max="100" step="5" value="75"></label>
-                <label class="parameter"><span class="parameter-head"><span>Bastjocklek</span><output id="trunk-base-radius-scale-value">1.30×</output></span><input id="trunk-base-radius-scale" type="range" min="0.5" max="1.8" step="0.05" value="1.3"></label>
-                <label class="parameter"><span class="parameter-head"><span>Sluttjocklek</span><output id="trunk-tip-radius-ratio-value">26%</output></span><input id="trunk-tip-radius-ratio" type="range" min="10" max="80" step="1" value="26"></label>
+            <div class="parameter-group"><span class="parameter-group-title">줄기</span>
+                <label class="parameter"><span class="parameter-head"><span>단계 수</span><output id="trunk-levels-value">3</output></span><input id="trunk-levels" type="range" min="1" max="6" step="1" value="3"></label>
+                <label class="parameter"><span class="parameter-head"><span>시작 길이 비율</span><output id="trunk-base-length-ratio-value">50%</output></span><input id="trunk-base-length-ratio" type="range" min="25" max="125" step="1" value="50"></label>
+                <label class="parameter"><span class="parameter-head"><span>단계당 길이 비율</span><output id="trunk-child-length-ratio-value">75%</output></span><input id="trunk-child-length-ratio" type="range" min="35" max="100" step="5" value="75"></label>
+                <label class="parameter"><span class="parameter-head"><span>밑동 굵기</span><output id="trunk-base-radius-scale-value">1.30×</output></span><input id="trunk-base-radius-scale" type="range" min="0.5" max="1.8" step="0.05" value="1.3"></label>
+                <label class="parameter"><span class="parameter-head"><span>끝 굵기 비율</span><output id="trunk-tip-radius-ratio-value">26%</output></span><input id="trunk-tip-radius-ratio" type="range" min="10" max="80" step="1" value="26"></label>
             </div>
-            <div class="parameter-group"><span class="parameter-group-title">Krona</span>
-                <label class="parameter"><span class="parameter-head"><span>Form</span></span><select id="canopy-shape"><option value="none">Ingen</option><option value="ball">Boll</option><option value="disk">Disk</option><option value="dome" selected>Kupa · öppen undertill</option><option value="cone">Kon · spets upptill</option><option value="drop">Droppe · spets nedåt</option></select></label>
-                <label class="parameter"><span class="parameter-head"><span>Krontextur</span></span><select id="canopy-texture"><option value="maple" selected>Maple</option><option value="maple2">Maple 2</option><option value="rowan">Rowan</option><option value="spruce-2x2">Gran 2×2</option></select></label>
-                <label class="parameter"><span class="parameter-head"><span>Texturens alfagräns</span><output id="canopy-texture-alpha-threshold-value">12%</output></span><input id="canopy-texture-alpha-threshold" type="range" min="1" max="60" step="1" value="12"></label>
-                <label class="parameter"><span class="parameter-head"><span>Texturens kantfade</span><output id="canopy-texture-edge-fade-value">38%</output></span><input id="canopy-texture-edge-fade" type="range" min="0" max="100" step="1" value="38"></label>
-                <label class="parameter"><span class="parameter-head"><span>Djup från grenspets</span><output id="canopy-depth-value">0</output></span><input id="canopy-depth" type="range" min="0" max="4" step="1" value="0"></label>
-                <label class="parameter"><span class="parameter-head"><span>Kronbredd</span><output id="canopy-width-scale-value">1.90×</output></span><input id="canopy-width-scale" type="range" min="0.5" max="3" step="0.05" value="1.9"></label>
-                <label class="parameter"><span class="parameter-head"><span>Kronbredd per stamnivå</span><output id="canopy-width-ratio-per-trunk-level-value">100%</output></span><input id="canopy-width-ratio-per-trunk-level" type="range" min="10" max="100" step="1" value="100"></label>
-                <label class="parameter"><span class="parameter-head"><span>Kronhöjd</span><output id="canopy-height-scale-value">1.90×</output></span><input id="canopy-height-scale" type="range" min="0.5" max="3" step="0.05" value="1.9"></label>
-                <label class="parameter"><span class="parameter-head"><span>Lövstorlek</span><output id="canopy-leaf-scale-value">0.65×</output></span><input id="canopy-leaf-scale" type="range" min="0.35" max="2.5" step="0.05" value="0.65"></label>
-                <label class="parameter"><span class="parameter-head"><span>Glans</span><output id="canopy-gloss-value">60%</output></span><input id="canopy-gloss" type="range" min="0" max="100" step="1" value="60"></label>
-                <label class="parameter"><span class="parameter-head"><span>Inre opacitet</span><output id="canopy-inner-opacity-value">75%</output></span><input id="canopy-inner-opacity" type="range" min="0" max="100" step="1" value="75"></label>
-                <label class="parameter"><span class="parameter-head"><span>Vindstyrka</span><output id="wind-strength-value">100%</output></span><input id="wind-strength" type="range" min="0" max="300" step="1" value="100"></label>
+            <div class="parameter-group"><span class="parameter-group-title">수관</span>
+                <label class="parameter"><span class="parameter-head"><span>형태</span></span><select id="canopy-shape"><option value="none">없음</option><option value="ball">공 모양</option><option value="disk">원반</option><option value="dome" selected>돔 · 아래쪽 열림</option><option value="cone">원뿔 · 위쪽 뾰족</option><option value="drop">물방울 · 아래쪽 뾰족</option></select></label>
+                <label class="parameter"><span class="parameter-head"><span>수관 텍스처</span></span><select id="canopy-texture"><option value="maple" selected>단풍</option><option value="maple2">단풍 2</option><option value="rowan">마가목</option><option value="spruce-2x2">가문비나무 2×2</option></select></label>
+                <label class="parameter"><span class="parameter-head"><span>텍스처 알파 임계값</span><output id="canopy-texture-alpha-threshold-value">12%</output></span><input id="canopy-texture-alpha-threshold" type="range" min="1" max="60" step="1" value="12"></label>
+                <label class="parameter"><span class="parameter-head"><span>텍스처 가장자리 페이드</span><output id="canopy-texture-edge-fade-value">38%</output></span><input id="canopy-texture-edge-fade" type="range" min="0" max="100" step="1" value="38"></label>
+                <label class="parameter"><span class="parameter-head"><span>가지 끝에서 깊이</span><output id="canopy-depth-value">0</output></span><input id="canopy-depth" type="range" min="0" max="4" step="1" value="0"></label>
+                <label class="parameter"><span class="parameter-head"><span>수관 너비</span><output id="canopy-width-scale-value">1.90×</output></span><input id="canopy-width-scale" type="range" min="0.5" max="3" step="0.05" value="1.9"></label>
+                <label class="parameter"><span class="parameter-head"><span>줄기 단계당 수관 너비 비율</span><output id="canopy-width-ratio-per-trunk-level-value">100%</output></span><input id="canopy-width-ratio-per-trunk-level" type="range" min="10" max="100" step="1" value="100"></label>
+                <label class="parameter"><span class="parameter-head"><span>수관 높이</span><output id="canopy-height-scale-value">1.90×</output></span><input id="canopy-height-scale" type="range" min="0.5" max="3" step="0.05" value="1.9"></label>
+                <label class="parameter"><span class="parameter-head"><span>잎 크기</span><output id="canopy-leaf-scale-value">0.65×</output></span><input id="canopy-leaf-scale" type="range" min="0.35" max="2.5" step="0.05" value="0.65"></label>
+                <label class="parameter"><span class="parameter-head"><span>광택</span><output id="canopy-gloss-value">60%</output></span><input id="canopy-gloss" type="range" min="0" max="100" step="1" value="60"></label>
+                <label class="parameter"><span class="parameter-head"><span>내부 불투명도</span><output id="canopy-inner-opacity-value">75%</output></span><input id="canopy-inner-opacity" type="range" min="0" max="100" step="1" value="75"></label>
+                <label class="parameter"><span class="parameter-head"><span>바람 세기</span><output id="wind-strength-value">100%</output></span><input id="wind-strength" type="range" min="0" max="300" step="1" value="100"></label>
             </div>
-            <div class="parameter-group"><span class="parameter-group-title">Colors</span>
-                <label class="parameter"><span class="parameter-head"><span>Brightness</span><output id="canopy-brightness-value">100%</output></span><input id="canopy-brightness" type="range" min="25" max="200" step="1" value="100"></label>
-                <label class="parameter"><span class="parameter-head"><span>Contrast</span><output id="canopy-contrast-value">100%</output></span><input id="canopy-contrast" type="range" min="0" max="200" step="1" value="100"></label>
-                <label class="parameter"><span class="parameter-head"><span>Saturation</span><output id="canopy-saturation-value">100%</output></span><input id="canopy-saturation" type="range" min="0" max="200" step="1" value="100"></label>
-                <label class="parameter"><span class="parameter-head"><span>Hue</span><output id="canopy-hue-value">0°</output></span><input id="canopy-hue" type="range" min="-180" max="180" step="1" value="0"></label>
+            <div class="parameter-group"><span class="parameter-group-title">색상</span>
+                <label class="parameter"><span class="parameter-head"><span>밝기</span><output id="canopy-brightness-value">100%</output></span><input id="canopy-brightness" type="range" min="25" max="200" step="1" value="100"></label>
+                <label class="parameter"><span class="parameter-head"><span>대비</span><output id="canopy-contrast-value">100%</output></span><input id="canopy-contrast" type="range" min="0" max="200" step="1" value="100"></label>
+                <label class="parameter"><span class="parameter-head"><span>채도</span><output id="canopy-saturation-value">100%</output></span><input id="canopy-saturation" type="range" min="0" max="200" step="1" value="100"></label>
+                <label class="parameter"><span class="parameter-head"><span>색조</span><output id="canopy-hue-value">0°</output></span><input id="canopy-hue" type="range" min="-180" max="180" step="1" value="0"></label>
             </div>
         </section>
-        <section class="statistics" aria-label="Modellstatistik">
-            <span class="label">Live-statistik</span>
+        <section class="statistics" aria-label="모델 통계">
+            <span class="label">실시간 통계</span>
             <dl class="details">
-                <dt>Trianglar</dt><dd id="stat-triangles">—</dd>
-                <dt>Vertices</dt><dd id="stat-vertices">—</dd>
-                <dt>Logiska grenar</dt><dd id="stat-branches">—</dd>
-                <dt>Förgreningsnoder</dt><dd id="stat-forks">—</dd>
-                <dt>Kronkluster</dt><dd id="stat-crowns">—</dd>
-                <dt>Generationer</dt><dd id="stat-generations">—</dd>
-                <dt>Draw calls</dt><dd id="stat-draw-calls">—</dd>
-                <dt>Höjd × bredd</dt><dd id="stat-size">—</dd>
+                <dt>삼각형</dt><dd id="stat-triangles">—</dd>
+                <dt>정점</dt><dd id="stat-vertices">—</dd>
+                <dt>논리적 가지</dt><dd id="stat-branches">—</dd>
+                <dt>분기 노드</dt><dd id="stat-forks">—</dd>
+                <dt>수관 클러스터</dt><dd id="stat-crowns">—</dd>
+                <dt>세대</dt><dd id="stat-generations">—</dd>
+                <dt>드로 콜</dt><dd id="stat-draw-calls">—</dd>
+                <dt>높이 × 너비</dt><dd id="stat-size">—</dd>
             </dl>
         </section>
     </aside>
 
-    <div class="help">Dra för att rotera · scrolla för att zooma · högerdra för att panorera</div>
-    <nav class="controls" aria-label="Visningsinställningar">
-        <button id="grid-toggle" class="control-button is-on" type="button" aria-pressed="true">Rutnät</button>
-        <button id="rotate-toggle" class="control-button" type="button" aria-pressed="false">Autorotera</button>
-        <button id="reset-view" class="control-button" type="button">Återställ vy</button>
+    <div class="help">드래그하여 회전 · 스크롤하여 줌 · 오른쪽 드래그로 화면 이동</div>
+    <nav class="controls" aria-label="보기 설정">
+        <button id="grid-toggle" class="control-button is-on" type="button" aria-pressed="true">격자</button>
+        <button id="rotate-toggle" class="control-button" type="button" aria-pressed="false">자동 회전</button>
+        <button id="reset-view" class="control-button" type="button">보기 초기화</button>
     </nav>
 
     <script type="module" src="/src/treeViewer.ts"></script>

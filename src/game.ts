@@ -94,7 +94,7 @@ function setupEventListeners(matrices: CameraMatrices) {
     // Add Next Unit button
     const nextUnitButton = document.createElement('button');
     nextUnitButton.id = 'next-unit-button';
-    nextUnitButton.textContent = 'Next Unit';
+    nextUnitButton.textContent = '다음 유닛';
     nextUnitButton.className = 'game-button';
     document.body.appendChild(nextUnitButton);
 
@@ -389,10 +389,10 @@ function setupEventListeners(matrices: CameraMatrices) {
     const updateEndTurnButton = () => {
         if (isHumanTurn()) {
             endTurnButton.disabled = false;
-            endTurnButton.textContent = "End Turn";
+            endTurnButton.textContent = "턴 종료";
         } else {
             endTurnButton.disabled = true;
-            endTurnButton.textContent = "AI Turn";
+            endTurnButton.textContent = "AI 턴";
         }
     };
 
@@ -747,9 +747,9 @@ export function castArmedSkill(actor: GameUnit, q: number, r: number): boolean {
 // The three ways a match can be driven, keyed by the string that rides in
 // the URL. Same set the menu offers and the boot path reads.
 const MATCH_MODES: Record<string, { label: string; controllers: [PlayerController, PlayerController] }> = {
-    'human-cpu': { label: 'Human vs AI', controllers: ['human', 'cpu'] },
+    'human-cpu': { label: '인간 vs AI', controllers: ['human', 'cpu'] },
     'cpu-cpu': { label: 'AI vs AI', controllers: ['cpu', 'cpu'] },
-    'human-human': { label: 'Human vs Human', controllers: ['human', 'human'] },
+    'human-human': { label: '인간 vs 인간', controllers: ['human', 'human'] },
 };
 
 // Pre-game start menu: pick a map and who controls each side.
@@ -782,7 +782,7 @@ function showStartMenu() {
     };
 
     // --- Map ---------------------------------------------------------
-    heading('Map');
+    heading('맵');
 
     let chosenMap = MAP_KEY;
 
@@ -811,7 +811,7 @@ function showStartMenu() {
     const entries: Array<{ key: string; label: string; note: string }> = [
         ...AUTHORED_PROVIDERS.map((provider, index) => ({
             key: provider.key,
-            label: `Mirror ${index + 1} — ${provider.name}`,
+            label: `미러 ${index + 1} — ${provider.name}`,
             note: sideNote(provider),
         })),
         ...RANDOM_PROVIDERS.map((provider) => ({
@@ -823,7 +823,7 @@ function showStartMenu() {
         // the side with the right answer to find.
         ...SCENARIO_PROVIDERS.map((provider) => ({
             key: provider.key,
-            label: `Scenario — ${provider.name}`,
+            label: `시나리오 — ${provider.name}`,
             note: sideNote(provider),
         })),
     ];
@@ -855,7 +855,7 @@ function showStartMenu() {
     // Chosen BEFORE the match type, because picking a match type is what
     // starts the game -- a setting placed after it would be one the player
     // never gets to touch.
-    heading('AI difficulty');
+    heading('AI 난이도');
 
     let chosenDifficulty: string = AI_DIFFICULTY ?? 'low';
 
@@ -864,9 +864,9 @@ function showStartMenu() {
     overlay.appendChild(difficultyRow);
 
     const difficultyNotes: Record<string, string> = {
-        low: 'looks 3 turns ahead',
-        medium: 'looks 4 turns ahead, searches wider',
-        hard: 'looks 5 turns ahead, searches widest — slower to think',
+        low: '3턴 앞을 내다봅니다',
+        medium: '4턴 앞을 내다보고 더 넓게 탐색',
+        hard: '5턴 앞을 내다보고 가장 넓게 탐색 — 사고 시간이 길어집니다',
     };
 
     const difficultyButtons: Array<{ key: string; element: HTMLButtonElement }> = [];
@@ -904,7 +904,7 @@ function showStartMenu() {
     paintDifficulty();
 
     // --- Mode --------------------------------------------------------
-    heading('Match type');
+    heading('매치 유형');
 
     for (const [mode, { label }] of Object.entries(MATCH_MODES)) {
         const button = document.createElement('button');
@@ -979,7 +979,7 @@ function ensureAiThinkingPanel(): { panel: HTMLDivElement; bar: HTMLDivElement; 
     const label = document.createElement('div');
     label.id = 'ai-thinking-label';
     label.style.cssText = 'font-size:13px;margin-bottom:6px;letter-spacing:0.5px;';
-    label.textContent = 'AI thinking…';
+    label.textContent = 'AI 사고 중…';
     const track = document.createElement('div');
     track.style.cssText = 'height:8px;background:rgba(255,255,255,0.15);border-radius:4px;overflow:hidden;';
     const bar = document.createElement('div');
@@ -1010,8 +1010,23 @@ window.addEventListener('vibewars:aiprogress', ((event: CustomEvent) => {
 window.addEventListener('vibewars:gameover', ((event: CustomEvent) => {
     const banner = document.createElement('div');
     banner.id = 'game-over-banner';
-    const headline = event.detail?.name ? `${event.detail.name} wins!` : 'Draw';
-    banner.textContent = event.detail?.reason ? `${headline} (${event.detail.reason})` : headline;
+    const headline = event.detail?.name ? `${event.detail.name} 승리!` : '무승부';
+    // Internal reason codes from GameState end up in the banner; translate
+    // the user-facing ones so the headline stays Korean. Anything we have
+    // not mapped is shown verbatim -- safer to be honest than to fake it.
+    const reasonLabels: Record<string, string> = {
+        'elimination': '전멸',
+        'mutual destruction': '서로 전멸',
+        'headquarters lost': '본거지 함락',
+        'turn cap': '턴 제한 초과',
+        'turn cap (points:': '턴 제한 초과 (점수:',
+    };
+    const rawReason: string = event.detail?.reason ?? '';
+    const translatedReason = Object.entries(reasonLabels).reduce(
+        (acc, [from, to]) => acc.replace(from, to),
+        rawReason,
+    );
+    banner.textContent = translatedReason ? `${headline} (${translatedReason})` : headline;
     banner.style.cssText =
         'position:absolute;top:40%;left:50%;transform:translate(-50%,-50%);z-index:100;' +
         'padding:24px 60px;font-family:Arial,sans-serif;font-size:36px;font-weight:bold;color:#fff;' +

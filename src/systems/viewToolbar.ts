@@ -32,12 +32,12 @@ interface ToggleSpec {
 }
 
 const TOGGLES: ToggleSpec[] = [
-    { key: 'grid', label: 'Grid', title: 'Hex grid lines over the terrain' },
-    { key: 'textures', label: 'Textures', title: 'Procedural ground detail, roads and tracks' },
-    { key: 'minimap', label: 'Minimap', title: 'The overview map below' },
-    { key: 'bloom', label: 'Bloom', title: 'Experimental glow around emissive effects -- expensive and off by default' },
-    { key: 'grass', label: 'Grass', title: 'Real grass blades on turf tiles, drawn when the camera is close' },
-    { key: 'stats', label: 'Stats', title: 'Frame time, draw calls and triangles' },
+    { key: 'grid', label: '격자', title: '지형 위에 표시되는 육각 격자선' },
+    { key: 'textures', label: '텍스처', title: '절차 생성된 지면 디테일, 도로, 자국' },
+    { key: 'minimap', label: '미니맵', title: '아래쪽에 표시되는 전체 지도' },
+    { key: 'bloom', label: '블룸', title: '발광 효과 주변의 실험적 글로우 — 비용이 크고 기본은 꺼짐' },
+    { key: 'grass', label: '잔디', title: '잔디 타일 위에 실제 풀잎을, 카메라가 가까울 때만 그림' },
+    { key: 'stats', label: '통계', title: '프레임 시간, 드로 콜, 삼각형 수' },
 ];
 
 interface SavedCameraView {

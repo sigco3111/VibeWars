@@ -225,7 +225,7 @@ const terrainAt = (q: number, r: number): string => {
 
 export const ford10MapProvider: MapProvider = {
     key: 'ford10',
-    name: 'Two Fords (10x10)',
+    name: '두 개의 여울 (10x10)',
     rows: ROWS,
     cols: COLS,
     randomRoads: 0,

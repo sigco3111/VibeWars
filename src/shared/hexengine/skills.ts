@@ -189,7 +189,7 @@ export function primaryAttackSkill(type: string, config: {
 }): SkillDef {
     return {
         id: `${type}:attack`,
-        name: 'Attack',
+        name: '공격',
         glyph: '⚔',
         target: { kind: 'enemyUnit' },
         minRange: config.minRange,
@@ -221,7 +221,7 @@ export const MECHANICAL_CLASSES = ['tank', 'aa', 'artillery', 'naval', 'air'] as
 // but only its shape, not its details.
 export const PIKE_REPAIR: SkillDef = {
     id: 'Pike:repair',
-    name: 'Repair',
+    name: '수리',
     glyph: '⚒',
     target: {
         kind: 'allyUnit',
@@ -274,7 +274,7 @@ export const PIKE_REPAIR: SkillDef = {
 // fires, never under-value the danger of walking into one.
 export const PIKE_FIRE: SkillDef = {
     id: 'Pike:fire',
-    name: 'Start Fire',
+    name: '불 지피기',
     glyph: '🔥',
     target: { kind: 'vegetatedHex' },
     // Adjacent only, and not the Pike's own hex -- a unit does not set fire
@@ -301,7 +301,7 @@ export const PIKE_FIRE: SkillDef = {
 // It is also the exact rule the movement-dead-end fix has just stabilised.
 export const DROVER_LOAD: SkillDef = {
     id: 'Drover:load',
-    name: 'Load',
+    name: '탑승',
     glyph: '⬇',
     target: { kind: 'allyUnit', classes: ['infantry'] },
     minRange: 1,
@@ -316,7 +316,7 @@ export const DROVER_LOAD: SkillDef = {
 
 export const DROVER_UNLOAD: SkillDef = {
     id: 'Drover:unload',
-    name: 'Unload',
+    name: '하차',
     glyph: '⬆',
     target: { kind: 'emptyHex' },
     minRange: 1,
