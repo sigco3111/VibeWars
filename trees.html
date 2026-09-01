@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#172019">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%23a8c66c' d='M16 2 5 18h7l-5 7h7v5h4v-5h7l-5-7h7z'/%3E%3C/svg%3E">
+    <title>Vibe Wars — 나무 모델 연구소</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap');
+
+        :root {
+            color-scheme: dark;
+            --ink: #e8eadf;
+            --muted: #999f91;
+            --line: rgba(226, 231, 212, 0.14);
+            --panel: rgba(20, 27, 21, 0.88);
+            --moss: #a8c66c;
+            --soil: #bb8d63;
+        }
+
+        * { box-sizing: border-box; }
+
+        html, body { width: 100%; height: 100%; margin: 0; }
+
+        body {
+            overflow: hidden;
+            color: var(--ink);
+            background: #141b16;
+            font-family: "DM Mono", monospace;
+        }
+
+        #viewer { position: fixed; inset: 0; }
+        #viewer canvas { display: block; width: 100%; height: 100%; cursor: grab; }
+        #viewer canvas:active { cursor: grabbing; }
+
+        .topbar {
+            position: fixed;
+            z-index: 5;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 74px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 28px;
+            border-bottom: 1px solid var(--line);
+            background: linear-gradient(180deg, rgba(14, 20, 16, 0.94), rgba(14, 20, 16, 0.72));
+            backdrop-filter: blur(16px);
+        }
+
+        .brand { display: flex; align-items: baseline; gap: 16px; }
+        .brand h1 {
+            margin: 0;
+            font: 600 25px/1 "Newsreader", serif;
+            letter-spacing: -0.02em;
+        }
+        .eyebrow, .count, .label {
+            color: var(--muted);
+            font-size: 10px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        .status { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 11px; }
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--moss);
+            box-shadow: 0 0 14px rgba(168, 198, 108, 0.7);
+        }
+
+        .catalog {
+            position: fixed;
+            z-index: 5;
+            top: 98px;
+            left: 24px;
+            width: 258px;
+            max-height: calc(100vh - 122px);
+            overflow-y: auto;
+            padding: 17px;
+            border: 1px solid var(--line);
+            border-radius: 3px;
+            background: var(--panel);
+            backdrop-filter: blur(18px);
+            box-shadow: 0 24px 70px rgba(0, 0, 0, 0.22);
+        }
+
+        .catalog-head { display: flex; justify-content: space-between; margin-bottom: 14px; }
+        .tree-list { display: grid; gap: 7px; }
+        .tree-card {
+            width: 100%;
+            padding: 13px;
+            color: var(--ink);
+            text-align: left;
+            border: 1px solid rgba(168, 198, 108, 0.38);
+            border-radius: 2px;
+            background: linear-gradient(135deg, rgba(168, 198, 108, 0.12), rgba(168, 198, 108, 0.03));
+            cursor: pointer;
+        }
+        .tree-card:not(.is-active) { border-color: var(--line); background: rgba(255, 255, 255, 0.018); }
+        .tree-card:hover { border-color: rgba(168, 198, 108, 0.58); }
+        .tree-card strong { display: block; margin-bottom: 6px; font: 500 15px/1.2 "Newsreader", serif; }
+        .tree-card span { color: var(--muted); font-size: 10px; }
+        .swatch { float: right; width: 9px; height: 9px; margin-top: 3px; border-radius: 50%; background: #526f34; }
+
+        .details {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 9px 12px;
+            margin-top: 16px;
+            padding-top: 15px;
+            border-top: 1px solid var(--line);
+            font-size: 10px;
+        }
+        .details dt { margin: 0; color: var(--muted); }
+        .details dd { margin: 0; color: #d4d8cc; text-align: right; }
+
+        .parameters {
+            display: grid;
+            gap: 15px;
+            margin-top: 16px;
+            padding-top: 15px;
+            border-top: 1px solid var(--line);
+        }
+        .parameter-group { display: grid; gap: 15px; }
+        .parameter-group + .parameter-group { padding-top: 16px; border-top: 1px solid var(--line); }
+        .parameter-group-title { color: var(--soil); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; }
+        .parameter-head {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 8px;
+            color: #cdd1c7;
+            font-size: 10px;
+        }
+        .parameter-head output { color: var(--moss); font-weight: 500; }
+        .generator-note { margin-top: -9px; color: var(--muted); font-size: 9px; }
+        .parameter select {
+            width: 100%;
+            height: 30px;
+            padding: 0 9px;
+            border: 1px solid var(--line);
+            border-radius: 2px;
+            color: #d4d8cc;
+            background: #172019;
+            font: 500 10px/1 "DM Mono", monospace;
+            cursor: pointer;
+        }
+        .parameter select:focus-visible { outline: 1px solid var(--moss); outline-offset: 2px; }
+        .parameter input[type="range"] {
+            width: 100%;
+            height: 14px;
+            margin: 0;
+            appearance: none;
+            background: transparent;
+            cursor: ew-resize;
+        }
+        .parameter input[type="range"]::-webkit-slider-runnable-track {
+            height: 2px;
+            background: linear-gradient(90deg, rgba(168,198,108,.75), rgba(232,234,223,.16));
+        }
+        .parameter input[type="range"]::-webkit-slider-thumb {
+            width: 12px;
+            height: 12px;
+            margin-top: -5px;
+            appearance: none;
+            border: 2px solid #172019;
+            border-radius: 50%;
+            background: var(--moss);
+            box-shadow: 0 0 0 1px rgba(168,198,108,.55);
+        }
+        .parameter input[type="range"]:focus-visible { outline: 1px solid var(--moss); outline-offset: 4px; }
+        .statistics {
+            margin-top: 16px;
+            padding-top: 15px;
+            border-top: 1px solid var(--line);
+        }
+        .statistics .details { margin-top: 12px; padding-top: 0; border-top: 0; }
+
+        .controls {
+            position: fixed;
+            z-index: 5;
+            right: 24px;
+            bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            border: 1px solid var(--line);
+            border-radius: 3px;
+            background: var(--panel);
+            backdrop-filter: blur(18px);
+        }
+
+        .control-button {
+            min-height: 36px;
+            padding: 0 13px;
+            border: 1px solid var(--line);
+            border-radius: 2px;
+            color: #cdd1c7;
+            background: rgba(255,255,255,0.035);
+            font: 500 10px/1 "DM Mono", monospace;
+            letter-spacing: .05em;
+            cursor: pointer;
+            transition: border-color 140ms, color 140ms, background 140ms;
+        }
+        .control-button:hover { color: #fff; border-color: rgba(168,198,108,.55); }
+        .control-button.is-on { color: #172019; border-color: var(--moss); background: var(--moss); }
+
+        .help {
+            position: fixed;
+            z-index: 4;
+            left: 50%;
+            bottom: 27px;
+            transform: translateX(-50%);
+            color: rgba(232, 234, 223, 0.58);
+            font-size: 10px;
+            letter-spacing: .04em;
+            pointer-events: none;
+        }
+
+        @media (max-width: 720px) {
+            .topbar { height: 62px; padding: 0 16px; }
+            .brand .eyebrow, .status span { display: none; }
+            .catalog { top: 78px; left: 14px; width: 210px; }
+            .controls { right: 14px; bottom: 14px; }
+            .help { display: none; }
+        }
+    </style>
+  <script type="module" crossorigin src="./assets/trees-SL2ANBFp.js"></script>
+  <link rel="modulepreload" crossorigin href="./assets/ProceduralDecorations-Dh2ZGR3Z.js">
+</head>
+<body>
+    <main id="viewer" aria-label="활엽수 3D 인터랙티브 뷰어"></main>
+
+    <header class="topbar">
+        <div class="brand">
+            <h1>나무 모델 연구소</h1>
+            <span class="eyebrow">Vibe Wars · 모델 작업장</span>
+        </div>
+        <div class="status"><i class="status-dot"></i><span>렌더러 가동 중</span></div>
+    </header>
+
+    <aside class="catalog" aria-label="나무 모델 목록">
+        <div class="catalog-head"><span class="label">모델</span><span id="preset-count" class="count">01 / 04</span></div>
+        <div class="tree-list" role="list" aria-label="나무 프리셋">
+            <button class="tree-card is-active" type="button" data-preset="broadleaf-standard" aria-pressed="true" role="listitem">
+                <i class="swatch"></i>
+                <strong>활엽수 · 표준</strong>
+                <span>ProceduralDecorations</span>
+            </button>
+            <button class="tree-card" type="button" data-preset="spruce" aria-pressed="false" role="listitem">
+                <i class="swatch"></i>
+                <strong>가문비나무</strong>
+                <span>ProceduralDecorations</span>
+            </button>
+            <button class="tree-card" type="button" data-preset="pine" aria-pressed="false" role="listitem">
+                <i class="swatch"></i>
+                <strong>소나무</strong>
+                <span>ProceduralDecorations</span>
+            </button>
+            <button class="tree-card" type="button" data-preset="birch" aria-pressed="false" role="listitem">
+                <i class="swatch"></i>
+                <strong>자작나무</strong>
+                <span>ProceduralDecorations</span>
+            </button>
+        </div>
+        <dl class="details">
+            <dt>유형</dt><dd>절차 생성</dd>
+            <dt>출처</dt><dd>게임의 숲 시스템</dd>
+            <dt>변형</dt><dd id="preset-variant">활엽수 #05</dd>
+            <dt>바람</dt><dd>활성</dd>
+        </dl>
+        <section class="parameters" aria-label="나무 파라미터">
+            <span class="label">생성기</span>
+            <div class="parameter-group"><span class="parameter-group-title">가지</span>
+                <label class="parameter"><span class="parameter-head"><span>분기당 가지 수</span><output id="branch-count-per-fork-value">3</output></span><input id="branch-count-per-fork" type="range" min="2" max="5" step="1" value="3"></label>
+                <label class="parameter"><span class="parameter-head"><span>가지 단계</span><output id="branch-levels-value">2</output></span><input id="branch-levels" type="range" min="1" max="4" step="1" value="2"></label>
+                <label class="parameter"><span class="parameter-head"><span>시작 길이 비율</span><output id="branch-start-length-ratio-value">38%</output></span><input id="branch-start-length-ratio" type="range" min="5" max="75" step="1" value="38"></label>
+                <label class="parameter"><span class="parameter-head"><span>줄기 단계당 길이 비율</span><output id="branch-length-ratio-per-trunk-level-value">75%</output></span><input id="branch-length-ratio-per-trunk-level" type="range" min="0" max="100" step="5" value="75"></label>
+                <label class="parameter"><span class="parameter-head"><span>가지 단계당 길이 비율</span><output id="branch-child-length-ratio-value">75%</output></span><input id="branch-child-length-ratio" type="range" min="0" max="100" step="5" value="75"></label>
+                <label class="parameter"><span class="parameter-head"><span>단계당 굵기 비율</span><output id="branch-child-radius-ratio-value">73%</output></span><input id="branch-child-radius-ratio" type="range" min="20" max="90" step="1" value="73"></label>
+                <label class="parameter"><span class="parameter-head"><span>중력 강도</span><output id="branch-gravity-strength-value">300%</output></span><input id="branch-gravity-strength" type="range" min="0" max="300" step="1" value="300"></label>
+            </div>
+            <div class="parameter-group"><span class="parameter-group-title">줄기</span>
+                <label class="parameter"><span class="parameter-head"><span>단계 수</span><output id="trunk-levels-value">3</output></span><input id="trunk-levels" type="range" min="1" max="6" step="1" value="3"></label>
+                <label class="parameter"><span class="parameter-head"><span>시작 길이 비율</span><output id="trunk-base-length-ratio-value">50%</output></span><input id="trunk-base-length-ratio" type="range" min="25" max="125" step="1" value="50"></label>
+                <label class="parameter"><span class="parameter-head"><span>단계당 길이 비율</span><output id="trunk-child-length-ratio-value">75%</output></span><input id="trunk-child-length-ratio" type="range" min="35" max="100" step="5" value="75"></label>
+                <label class="parameter"><span class="parameter-head"><span>밑동 굵기</span><output id="trunk-base-radius-scale-value">1.30×</output></span><input id="trunk-base-radius-scale" type="range" min="0.5" max="1.8" step="0.05" value="1.3"></label>
+                <label class="parameter"><span class="parameter-head"><span>끝 굵기 비율</span><output id="trunk-tip-radius-ratio-value">26%</output></span><input id="trunk-tip-radius-ratio" type="range" min="10" max="80" step="1" value="26"></label>
+            </div>
+            <div class="parameter-group"><span class="parameter-group-title">수관</span>
+                <label class="parameter"><span class="parameter-head"><span>형태</span></span><select id="canopy-shape"><option value="none">없음</option><option value="ball">공 모양</option><option value="disk">원반</option><option value="dome" selected>돔 · 아래쪽 열림</option><option value="cone">원뿔 · 위쪽 뾰족</option><option value="drop">물방울 · 아래쪽 뾰족</option></select></label>
+                <label class="parameter"><span class="parameter-head"><span>수관 텍스처</span></span><select id="canopy-texture"><option value="maple" selected>단풍</option><option value="maple2">단풍 2</option><option value="rowan">마가목</option><option value="spruce-2x2">가문비나무 2×2</option></select></label>
+                <label class="parameter"><span class="parameter-head"><span>텍스처 알파 임계값</span><output id="canopy-texture-alpha-threshold-value">12%</output></span><input id="canopy-texture-alpha-threshold" type="range" min="1" max="60" step="1" value="12"></label>
+                <label class="parameter"><span class="parameter-head"><span>텍스처 가장자리 페이드</span><output id="canopy-texture-edge-fade-value">38%</output></span><input id="canopy-texture-edge-fade" type="range" min="0" max="100" step="1" value="38"></label>
+                <label class="parameter"><span class="parameter-head"><span>가지 끝에서 깊이</span><output id="canopy-depth-value">0</output></span><input id="canopy-depth" type="range" min="0" max="4" step="1" value="0"></label>
+                <label class="parameter"><span class="parameter-head"><span>수관 너비</span><output id="canopy-width-scale-value">1.90×</output></span><input id="canopy-width-scale" type="range" min="0.5" max="3" step="0.05" value="1.9"></label>
+                <label class="parameter"><span class="parameter-head"><span>줄기 단계당 수관 너비 비율</span><output id="canopy-width-ratio-per-trunk-level-value">100%</output></span><input id="canopy-width-ratio-per-trunk-level" type="range" min="10" max="100" step="1" value="100"></label>
+                <label class="parameter"><span class="parameter-head"><span>수관 높이</span><output id="canopy-height-scale-value">1.90×</output></span><input id="canopy-height-scale" type="range" min="0.5" max="3" step="0.05" value="1.9"></label>
+                <label class="parameter"><span class="parameter-head"><span>잎 크기</span><output id="canopy-leaf-scale-value">0.65×</output></span><input id="canopy-leaf-scale" type="range" min="0.35" max="2.5" step="0.05" value="0.65"></label>
+                <label class="parameter"><span class="parameter-head"><span>광택</span><output id="canopy-gloss-value">60%</output></span><input id="canopy-gloss" type="range" min="0" max="100" step="1" value="60"></label>
+                <label class="parameter"><span class="parameter-head"><span>내부 불투명도</span><output id="canopy-inner-opacity-value">75%</output></span><input id="canopy-inner-opacity" type="range" min="0" max="100" step="1" value="75"></label>
+                <label class="parameter"><span class="parameter-head"><span>바람 세기</span><output id="wind-strength-value">100%</output></span><input id="wind-strength" type="range" min="0" max="300" step="1" value="100"></label>
+            </div>
+            <div class="parameter-group"><span class="parameter-group-title">색상</span>
+                <label class="parameter"><span class="parameter-head"><span>밝기</span><output id="canopy-brightness-value">100%</output></span><input id="canopy-brightness" type="range" min="25" max="200" step="1" value="100"></label>
+                <label class="parameter"><span class="parameter-head"><span>대비</span><output id="canopy-contrast-value">100%</output></span><input id="canopy-contrast" type="range" min="0" max="200" step="1" value="100"></label>
+                <label class="parameter"><span class="parameter-head"><span>채도</span><output id="canopy-saturation-value">100%</output></span><input id="canopy-saturation" type="range" min="0" max="200" step="1" value="100"></label>
+                <label class="parameter"><span class="parameter-head"><span>색조</span><output id="canopy-hue-value">0°</output></span><input id="canopy-hue" type="range" min="-180" max="180" step="1" value="0"></label>
+            </div>
+        </section>
+        <section class="statistics" aria-label="모델 통계">
+            <span class="label">실시간 통계</span>
+            <dl class="details">
+                <dt>삼각형</dt><dd id="stat-triangles">—</dd>
+                <dt>정점</dt><dd id="stat-vertices">—</dd>
+                <dt>논리적 가지</dt><dd id="stat-branches">—</dd>
+                <dt>분기 노드</dt><dd id="stat-forks">—</dd>
+                <dt>수관 클러스터</dt><dd id="stat-crowns">—</dd>
+                <dt>세대</dt><dd id="stat-generations">—</dd>
+                <dt>드로 콜</dt><dd id="stat-draw-calls">—</dd>
+                <dt>높이 × 너비</dt><dd id="stat-size">—</dd>
+            </dl>
+        </section>
+    </aside>
+
+    <div class="help">드래그하여 회전 · 스크롤하여 줌 · 오른쪽 드래그로 화면 이동</div>
+    <nav class="controls" aria-label="보기 설정">
+        <button id="grid-toggle" class="control-button is-on" type="button" aria-pressed="true">격자</button>
+        <button id="rotate-toggle" class="control-button" type="button" aria-pressed="false">자동 회전</button>
+        <button id="reset-view" class="control-button" type="button">보기 초기화</button>
+    </nav>
+
+</body>
+</html>

@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vibe Wars — 바이브 워즈</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(to bottom, #13284b 0%, #07162f 58%, #020916 100%);
+            font-family: Arial, sans-serif;
+            --hud-bg: rgba(14, 18, 24, 0.86);
+            --hud-bg-hover: rgba(26, 34, 43, 0.94);
+            --hud-border: rgba(255, 255, 255, 0.10);
+            --hud-text: #dfe6ee;
+            --hud-muted: #7f8b99;
+            --hud-ready: #7deda0;
+            --hud-font: "Avenir Next", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            --hud-font-size: 12px;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+            pointer-events: auto;
+        }
+
+        /* Size and top offset are set from MAP_CONFIG.MINIMAP by
+           viewToolbar.ts -- render.ts draws the map itself from the same
+           constant, so a hardcoded value here would drift out of step. */
+        #minimap-overlay {
+            position: absolute;
+            right: 10px;
+            pointer-events: auto;
+            cursor: pointer;
+        }
+
+        #view-toolbar {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 6px;
+            padding: 5px;
+            border-radius: 7px;
+            background: rgba(14, 18, 24, 0.72);
+            backdrop-filter: blur(3px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+            pointer-events: auto;
+            user-select: none;
+        }
+
+        .sun-controls {
+            position: absolute;
+            top: calc(100% + 6px);
+            right: 0;
+            width: 320px;
+            display: grid;
+            gap: 8px;
+            padding: 10px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            border-radius: 7px;
+            background: rgba(14, 18, 24, 0.82);
+            backdrop-filter: blur(3px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+        }
+
+        .sun-controls[hidden] {
+            display: none;
+        }
+
+        .sun-control {
+            display: grid;
+            grid-template-columns: 110px minmax(120px, 1fr) 38px;
+            align-items: center;
+            gap: 8px;
+            color: #c4ccd7;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .sun-control input {
+            width: 100%;
+            accent-color: #40c4ff;
+        }
+
+        .sun-control output {
+            color: #7ad8ff;
+            font-variant-numeric: tabular-nums;
+            text-align: right;
+        }
+
+        /* The skill bar: one button per skill of the selected unit.
+           Bottom-centre, between Next Unit and End Turn, so it sits where
+           the eye already goes for actions. */
+        #skill-bar {
+            position: absolute;
+            bottom: 14px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: none;
+            gap: 8px;
+            z-index: 95;
+            font-family: Arial, sans-serif;
+        }
+        .skill {
+            position: relative;
+            width: 54px;
+            height: 54px;
+            border: 2px solid #2b3a55;
+            border-radius: 8px;
+            background: rgba(10, 15, 30, 0.88);
+            color: #9fb2d0;
+            cursor: pointer;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .skill:hover:not(:disabled) { border-color: #4a5f85; color: #dff5e3; }
+        .skill.is-selected { border-color: #4CAF50; background: #1b3a24; color: #dff5e3; }
+        /* A skill on cooldown is refused, not merely numbered -- the
+           reference lets you click one and casts it anyway. */
+        .skill:disabled { opacity: 0.45; cursor: not-allowed; }
+        .skill-glyph { font-size: 24px; line-height: 1; }
+        .skill-cooldown {
+            position: absolute;
+            right: 3px;
+            bottom: 1px;
+            font-size: 13px;
+            font-weight: bold;
+            color: #ffcf6b;
+        }
+
+        .view-toggle {
+            padding: 6px 12px;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            color: #8c98a8;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.15s, color 0.15s, border-color 0.15s;
+        }
+
+        .view-toggle:hover {
+            color: #dfe6ee;
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        /* On, not merely focused: the cyan matches the energy panels the
+           models glow with, so "active" reads the same across the UI. */
+        .view-toggle.is-on {
+            color: #06121a;
+            background: #40c4ff;
+            border-color: #7ad8ff;
+        }
+
+        .view-toggle.is-on:hover {
+            background: #63d1ff;
+        }
+
+        /* Unit info is one docked LEFT RAIL: portrait, skills, stats. It is
+           not a floating card and none of those sections may become a
+           parallel column. Hidden until something is inspected --
+           display:none rather than opacity, so it cannot swallow clicks
+           meant for the board while it is invisible. */
+        #unit-info {
+            position: absolute;
+            left: 0;
+            /* The Next Unit control continues this rail down to the viewport
+               edge. No floating gap, and no overlap with board clicks. */
+            bottom: 52px;
+            display: none;
+            width: 248px;
+            max-height: calc(100vh - 76px);
+            overflow-y: auto;
+            flex-direction: column;
+            box-sizing: border-box;
+            padding: 12px 14px 14px 12px;
+            border-radius: 0 10px 0 0;
+            background: var(--hud-bg);
+            backdrop-filter: blur(4px);
+            box-shadow: 5px 4px 16px rgba(0, 0, 0, 0.45);
+            color: var(--hud-text);
+            font-family: var(--hud-font);
+            user-select: none;
+            pointer-events: auto;
+            font-size: var(--hud-font-size);
+        }
+
+        /* One typographic size throughout the rail. Hierarchy comes from
+           weight, spacing and colour instead of jumping between sizes. */
+        #unit-info * {
+            font-size: inherit;
+        }
+
+        #unit-info.is-open {
+            display: flex;
+        }
+
+        .unit-info-portrait {
+            width: 100%;
+            height: 142px;
+            margin-top: 8px;
+            border-radius: 8px;
+            background:
+                linear-gradient(135deg, rgba(64, 196, 255, 0.08), transparent 55%),
+                rgba(255, 255, 255, 0.04);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .unit-info-portrait img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* One full-width section below another. Width and flex-basis are
+           intentionally absent: this panel has no internal layout columns. */
+        .unit-info-body {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            box-sizing: border-box;
+            padding-top: 12px;
+        }
+
+        .unit-info-head {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+        }
+
+        .unit-info-name {
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+
+        .unit-info-owner {
+            font-weight: 700;
+            letter-spacing: 1.4px;
+        }
+
+        .unit-info-class {
+            letter-spacing: 1.6px;
+            color: #7f8b99;
+        }
+
+        /* Two columns, label then value, so the numbers line up in a
+           readable block rather than running as a sentence. */
+        .unit-info-stats {
+            display: grid;
+            grid-template-columns: auto auto;
+            column-gap: 14px;
+            row-gap: 3px;
+            margin: 0;
+        }
+
+        .unit-info-stats dt {
+            color: #8a97a6;
+        }
+
+        .unit-info-stats dd {
+            margin: 0;
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+            font-weight: 600;
+        }
+
+        .unit-info-vs-label {
+            margin-top: 10px;
+            letter-spacing: 1.6px;
+            color: #7f8b99;
+        }
+
+        /* Chips rather than more table rows: six matchups as a list would
+           be taller than everything above it put together. */
+        .unit-info-vs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-top: 5px;
+        }
+
+        .vs-chip {
+            display: inline-flex;
+            align-items: baseline;
+            gap: 5px;
+            padding: 2px 7px;
+            border-radius: 4px;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            background: rgba(255, 255, 255, 0.07);
+            color: #9aa7b5;
+        }
+
+        .vs-chip b {
+            font-variant-numeric: tabular-nums;
+        }
+
+        .vs-chip.is-strong { background: rgba(61, 220, 91, 0.18); color: #7dedA0; }
+        .vs-chip.is-weak   { background: rgba(255, 149, 0, 0.18);  color: #ffb454; }
+        /* Cannot touch it at all -- a different statement from hitting it
+           at half strength, so it does not look like just another number. */
+        .vs-chip.is-none   { background: rgba(255, 59, 48, 0.15);  color: #ff8078; }
+
+        /* Skills are the middle BLOCK, never a third column. Present only
+           when the unit has something past its attack. */
+        .unit-info-skills {
+            display: none;
+            flex-direction: column;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 2px 0 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+        }
+
+        #unit-info.has-skills .unit-info-skills {
+            display: flex;
+        }
+
+        /* PREFIXED, because the skill bar already owns `.skill` and
+           `.skill-glyph` further up this stylesheet -- its rule sets
+           display:flex, which laid these three lines out side by side
+           inside a 200px column. */
+        .unit-skill {
+            margin-top: 8px;
+        }
+
+        .unit-skill.is-cooling {
+            opacity: 0.5;
+        }
+
+        .unit-skill-head {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+        }
+
+        .unit-skill-glyph {
+            line-height: 1;
+        }
+
+        .unit-skill-name {
+            font-weight: 700;
+            flex: 1 1 auto;
+            white-space: nowrap;
+        }
+
+        .unit-skill-state {
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: #7dedA0;
+        }
+
+        .unit-skill.is-cooling .unit-skill-state {
+            color: #ffb454;
+        }
+
+        .unit-skill-what {
+            color: #b3bdc8;
+            margin-top: 1px;
+        }
+
+        .unit-skill-meta {
+            color: #7f8b99;
+            margin-top: 1px;
+        }
+
+        /* Top left, the one corner nothing else claims: the toolbar and the
+           minimap both hang off the right edge, and anchoring the readout
+           to that edge too meant a wide toolbar sat straight on top of it. */
+        #frame-stats {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            background: rgba(14, 18, 24, 0.72);
+            color: #9ff0c0;
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: 12px;
+            line-height: 1.45;
+            white-space: pre;
+            text-align: left;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        /* Match controls share the unit rail's material and typography.
+           Their position is part of the shape: Next Unit closes the left
+           rail, End Turn mirrors it against the opposite viewport edge. */
+        .game-button {
+            position: absolute;
+            z-index: 95;
+            height: 52px;
+            box-sizing: border-box;
+            padding: 0 18px;
+            font-family: var(--hud-font);
+            font-size: var(--hud-font-size);
+            font-weight: 700;
+            letter-spacing: 0.10em;
+            text-transform: uppercase;
+            color: var(--hud-text);
+            background: var(--hud-bg);
+            border: 1px solid var(--hud-border);
+            backdrop-filter: blur(4px);
+            cursor: pointer;
+            box-shadow: 0 -3px 14px rgba(0, 0, 0, 0.34);
+            transition: background-color 0.15s, color 0.15s, border-color 0.15s;
+        }
+
+        #next-unit-button {
+            left: 0;
+            bottom: 0;
+            width: 248px;
+            border-left: 0;
+            border-bottom: 0;
+            border-radius: 0 0 10px 0;
+        }
+
+        #end-turn-button {
+            right: 0;
+            bottom: 0;
+            min-width: 164px;
+            border-right: 0;
+            border-bottom: 0;
+            border-radius: 10px 0 0 0;
+        }
+
+        .game-button:hover:not(:disabled) {
+            color: var(--hud-ready);
+            background: var(--hud-bg-hover);
+            border-color: rgba(125, 237, 160, 0.38);
+        }
+
+        .game-button:active:not(:disabled) {
+            background: rgba(35, 49, 42, 0.96);
+        }
+
+        .game-button:focus-visible {
+            outline: 2px solid #40c4ff;
+            outline-offset: -3px;
+        }
+
+        .game-button:disabled {
+            color: var(--hud-muted);
+            background: rgba(14, 18, 24, 0.68);
+            opacity: 0.58;
+            cursor: not-allowed;
+        }
+    </style>
+  <script type="module" crossorigin src="./assets/ProceduralDecorations-Dh2ZGR3Z.js"></script>
+  <script type="module" crossorigin src="./assets/game-DwJHghqg.js"></script>
+</head>
+
+<body>
+    <div id="minimap-overlay"></div>
+    <button id="end-turn-button" class="game-button">턴 종료</button>
+    <script>
+        window.HEX_ENGINE_OPTIONS = {
+            loadModels: true,
+            enableDecorations: true,
+            enableUnitSystems: true,
+            enableRoads: true,
+        };
+    </script>
+    <!-- Single ESM entry point -- game.ts's import graph pulls in every
+         other module (constants, options, all hexengine systems, render,
+         etc.), so they no longer need their own <script type="module"> tags. -->
+</body>
+
+</html>
