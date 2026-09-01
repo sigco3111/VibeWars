@@ -748,7 +748,7 @@ export function castArmedSkill(actor: GameUnit, q: number, r: number): boolean {
 // the URL. Same set the menu offers and the boot path reads.
 const MATCH_MODES: Record<string, { label: string; controllers: [PlayerController, PlayerController] }> = {
     'human-cpu': { label: '인간 vs AI', controllers: ['human', 'cpu'] },
-    'cpu-cpu': { label: 'AI vs AI', controllers: ['cpu', 'cpu'] },
+    'cpu-cpu': { label: 'AI 대 AI', controllers: ['cpu', 'cpu'] },
     'human-human': { label: '인간 vs 인간', controllers: ['human', 'human'] },
 };
 
@@ -769,7 +769,7 @@ function showStartMenu() {
         'overflow-y:auto;padding:40px 20px;box-sizing:border-box;';
 
     const title = document.createElement('h1');
-    title.textContent = 'VibeWars';
+    title.textContent = '바이브 워즈';
     title.style.cssText = 'color:#fff;font-size:44px;margin:0 0 4px 0;';
     overlay.appendChild(title);
 
@@ -919,7 +919,7 @@ function showStartMenu() {
                 // start, pick a mode, play.
                 overlay.remove();
                 initGame(MATCH_MODES[mode].controllers).catch(error => {
-                    console.error("Error initializing game:", error);
+                    console.error("게임 초기화 오류:", error);
                 });
                 return;
             }
@@ -943,7 +943,7 @@ function bootFromUrlOrShowMenu() {
     // controllers are irrelevant because initGame skips units and start().
     if (TERRAIN_VIEWER) {
         initGame(['human', 'human']).catch(error => {
-            console.error("Error initializing terrain viewer:", error);
+            console.error("지형 뷰어 초기화 오류:", error);
         });
         return;
     }
@@ -951,14 +951,14 @@ function bootFromUrlOrShowMenu() {
     const mode = START_MODE && MATCH_MODES[START_MODE];
     if (mode) {
         initGame(mode.controllers).catch(error => {
-            console.error("Error initializing game:", error);
+            console.error("게임 초기화 오류:", error);
         });
         return;
     }
     showStartMenu();
 }
 
-// Small "AI thinking" panel with a progress bar, driven by the search's
+// Small "AI 사고 중" panel with a progress bar, driven by the search's
 // progress ticks (AIController dispatches vibewars:aiprogress). Shown
 // while done < total, hidden when the search completes.
 function ensureAiThinkingPanel(): { panel: HTMLDivElement; bar: HTMLDivElement; label: HTMLDivElement } {

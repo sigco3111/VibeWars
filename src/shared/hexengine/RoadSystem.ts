@@ -39,7 +39,7 @@ class RoadSystem {
         const path = PathfindingSystem.getPath(startQ, startR, endQ, endR, Infinity, roadUnit);
 
         if (path.length === 0) {
-            console.warn('No valid path found for road construction');
+            console.warn('도로 건설용 유효 경로를 찾지 못했습니다');
             return false;
         }
         else {

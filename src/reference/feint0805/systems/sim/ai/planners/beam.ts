@@ -133,7 +133,7 @@ export function* beamPlanGen(
     // none until the picks are made. Refused identically in both planners
     // so an engine cannot exist that only one of them can run.
     if (beam.dedupeChildren && beam.spreadWorst) {
-        throw new Error('beam.dedupeChildren and beam.spreadWorst are mutually exclusive');
+        throw new Error('beam.dedupeChildren와 beam.spreadWorst는 동시에 사용할 수 없습니다');
     }
 
     const hasUnits = [...snapshot.liveUnits()].some((u) => u[1].playerIndex === playerIndex);

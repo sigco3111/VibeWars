@@ -692,7 +692,7 @@ class UnitSystem {
     // meant to pick up, and if the click landed a hex off the cast was
     // refused in silence -- doubly so since a refused cast now consumes the
     // click rather than driving the unit somewhere it was not asked to go.
-    // "Nothing happens" was the whole user experience of a near miss.
+    // "아무 일도 일어나지 않는다" was the whole user experience of a near miss.
     //
     // Answered by asking skillAccepts itself rather than by re-deriving the
     // rules, so the highlight and the cast can never disagree about what is
@@ -1036,14 +1036,14 @@ class UnitSystem {
         const defenderHex = GridSystem.findHex(defender.q, defender.r);
 
         if (!attackerHex || !defenderHex) {
-            console.error('Invalid hex coordinates for attack');
+            console.error('공격 대상 헥스 좌표가 잘못되었습니다');
             return;
         }
 
         // Get attacker's stats
         const attackerStats = this.getUnitStats(attacker.type);
         if (!attackerStats) {
-            console.error('Invalid attacker unit type:', attacker.type);
+            console.error('공격자 유닛 타입이 잘못되었습니다:', attacker.type);
             return;
         }
 

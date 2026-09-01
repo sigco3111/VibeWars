@@ -242,7 +242,7 @@ export const UNIT_TYPES = {
             scale: 0.22,
             rotation: 0,
             attackEffect: 'cannon',  // main gun, not a rocket
-            // The only transport in the game. "Personnel transport" was the
+            // 게임에서 유일한 수송차. '인원 수송차'라고 불리던 것이 이제 그 이상입니다 --
             // model's name and nothing more until now -- nothing in this
             // codebase could be carried by anything.
             capacity: 1,

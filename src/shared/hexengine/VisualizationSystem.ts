@@ -165,7 +165,7 @@ class VisualizationSystem {
                 },
                 undefined,
                 (error: any) => {
-                    console.error('Error loading rocket model:', error);
+                    console.error('로켓 모델 로딩 오류:', error);
                     reject(error);
                 }
             );

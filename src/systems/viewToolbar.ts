@@ -61,7 +61,7 @@ interface SavedCameraView {
 
 const SAVED_CAMERA_VIEWS: SavedCameraView[] = [{
     map: 'random30fixed',
-    label: 'View 1',
+    label: '뷰 1',
     position: [33.01423490563091, 26, 47.958068764895366],
     quaternion: [-0.4478282350657019, 0.2854377067551525, 0.15339230689209105, 0.8333342592421247],
     groundLookAt: [22.465720933342098, 0, 34.366460468487574],
@@ -78,7 +78,7 @@ const SAVED_CAMERA_VIEWS: SavedCameraView[] = [{
     filmOffset: 0,
 }, {
     map: 'random30fixed',
-    label: 'View 2',
+    label: '뷰 2',
     position: [-3.0336095764246966, 15, 49.17129314655757],
     quaternion: [-0.3833340669417683, -0.39358168809929583, -0.1851714628596237, 0.8147760288921241],
     groundLookAt: [6.689557743838813, -1.7763568394002505e-15, 41.45546255889942],
@@ -195,7 +195,7 @@ async function copyText(text: string): Promise<void> {
     textarea.select();
     const copied = document.execCommand('copy');
     textarea.remove();
-    if (!copied) throw new Error('Browser refused clipboard access');
+    if (!copied) throw new Error('브라우저가 클립보드 접근을 거부했습니다');
 }
 
 // The minimap's DOM overlay is only a click target -- the map itself is
@@ -251,26 +251,26 @@ function createSceneControls(): HTMLElement {
 
     const degrees = (value: number): string => `${Math.round(value)}°`;
     const percent = (value: number): string => `${Math.round(value)}%`;
-    const azimuth = makeRange('Solrotation', 0, 360, angles.azimuth, degrees);
-    const elevation = makeRange('Sol över plan', 0, 180, angles.elevation, degrees);
-    const strength = makeRange('Solstyrka', 0, 300, SunSystem.getStrength() * 100, percent);
-    const perspective = makeRange('Perspektiv', 20, 100, camera.fov, degrees);
-    const waterSaturation = makeRange('Vattenmättnad', 0, 300, waterCalibration.saturation * 100, percent);
-    const waterContrast = makeRange('Vattenkontrast', 0, 300, waterCalibration.contrast * 100, percent);
-    const waterBrightness = makeRange('Vattenljushet', 0, 300, waterCalibration.exposure * 100, percent);
-    const sceneBrightness = makeRange('Total ljushet', 0, 300, sceneGrade.exposure * 100, percent);
-    const sceneContrast = makeRange('Total kontrast', 0, 300, sceneGrade.contrast * 100, percent);
-    const sceneSaturation = makeRange('Total mättnad', 0, 300, sceneGrade.saturation * 100, percent);
-    azimuth.input.title = 'Rotate the directional light around the battlefield';
-    elevation.input.title = 'Move the directional light over the battlefield';
-    strength.input.title = 'Adjust the strength of the directional sunlight';
-    perspective.input.title = 'Adjust camera lens: low is flatter telephoto, high is stronger wide-angle perspective';
-    waterSaturation.input.title = 'Adjust saturation of the final rendered water colour';
-    waterContrast.input.title = 'Adjust contrast of the final rendered water colour';
-    waterBrightness.input.title = 'Adjust brightness of the final rendered water colour';
-    sceneBrightness.input.title = 'Adjust brightness of the complete rendered scene';
-    sceneContrast.input.title = 'Adjust contrast of the complete rendered scene';
-    sceneSaturation.input.title = 'Adjust saturation of the complete rendered scene';
+    const azimuth = makeRange('태양 회전', 0, 360, angles.azimuth, degrees);
+    const elevation = makeRange('태양 고도', 0, 180, angles.elevation, degrees);
+    const strength = makeRange('태양 세기', 0, 300, SunSystem.getStrength() * 100, percent);
+    const perspective = makeRange('원근', 20, 100, camera.fov, degrees);
+    const waterSaturation = makeRange('물 채도', 0, 300, waterCalibration.saturation * 100, percent);
+    const waterContrast = makeRange('물 대비', 0, 300, waterCalibration.contrast * 100, percent);
+    const waterBrightness = makeRange('물 밝기', 0, 300, waterCalibration.exposure * 100, percent);
+    const sceneBrightness = makeRange('전체 밝기', 0, 300, sceneGrade.exposure * 100, percent);
+    const sceneContrast = makeRange('전체 대비', 0, 300, sceneGrade.contrast * 100, percent);
+    const sceneSaturation = makeRange('전체 채도', 0, 300, sceneGrade.saturation * 100, percent);
+    azimuth.input.title = '전장을 가로질러 방향광을 회전';
+    elevation.input.title = '전장 위로 방향광을 이동';
+    strength.input.title = '태양 방향광의 세기를 조절';
+    perspective.input.title = '카메라 렌즈 조절 — 낮으면 평평한 망원, 높으면 강한 광각 원근감';
+    waterSaturation.input.title = '최종 렌더링된 물 색상의 채도 조절';
+    waterContrast.input.title = '최종 렌더링된 물 색상의 대비 조절';
+    waterBrightness.input.title = '최종 렌더링된 물 색상의 밝기 조절';
+    sceneBrightness.input.title = '전체 렌더링된 씬의 밝기 조절';
+    sceneContrast.input.title = '전체 렌더링된 씬의 대비 조절';
+    sceneSaturation.input.title = '전체 렌더링된 씬의 채도 조절';
 
     const updateSun = (): void => {
         const azimuthDegrees = Number(azimuth.input.value);
@@ -380,16 +380,16 @@ export function initViewToolbar(): void {
 
     const copyCameraButton = document.createElement('button');
     copyCameraButton.className = 'view-toggle';
-    copyCameraButton.textContent = 'Copy camera';
-    copyCameraButton.title = 'Copy the complete camera view as JSON';
+    copyCameraButton.textContent = '카메라 복사';
+    copyCameraButton.title = '현재 카메라 뷰를 JSON으로 복사';
     copyCameraButton.addEventListener('click', async () => {
-        const originalLabel = 'Copy camera';
+        const originalLabel = '카메라 복사';
         try {
             await copyText(cameraViewJson());
-            copyCameraButton.textContent = 'Copied';
+            copyCameraButton.textContent = '복사됨';
         } catch (error) {
-            console.error('Could not copy camera JSON', error);
-            copyCameraButton.textContent = 'Copy failed';
+            console.error('카메라 JSON을 복사하지 못했습니다', error);
+            copyCameraButton.textContent = '복사 실패';
         }
         window.setTimeout(() => {
             copyCameraButton.textContent = originalLabel;
@@ -412,7 +412,7 @@ export function initViewToolbar(): void {
     const sceneControlsButton = document.createElement('button');
     sceneControlsButton.className = 'view-toggle';
     sceneControlsButton.textContent = '…';
-    sceneControlsButton.title = 'Show or hide scene controls';
+    sceneControlsButton.title = '씬 컨트롤 표시/숨기기';
     sceneControlsButton.setAttribute('aria-controls', sceneControls.id);
     sceneControlsButton.setAttribute('aria-expanded', 'false');
     sceneControlsButton.addEventListener('click', () => {

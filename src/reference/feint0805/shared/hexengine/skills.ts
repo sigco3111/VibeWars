@@ -274,7 +274,7 @@ export const PIKE_REPAIR: SkillDef = {
 // fires, never under-value the danger of walking into one.
 export const PIKE_FIRE: SkillDef = {
     id: 'Pike:fire',
-    name: 'Start Fire',
+    name: '불 지피기',
     glyph: '🔥',
     target: { kind: 'vegetatedHex' },
     // Adjacent only, and not the Pike's own hex -- a unit does not set fire

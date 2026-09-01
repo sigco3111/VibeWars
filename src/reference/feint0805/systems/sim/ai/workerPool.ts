@@ -73,7 +73,7 @@ export class SimWorkerPool implements SimJobRunner {
                 worker.onmessage = (event: MessageEvent<any>) => this.onMessage(worker, event.data);
                 // A worker that dies takes its job with it; fail that job
                 // rather than hang the turn forever.
-                worker.onerror = () => this.failAllOn(worker, new Error('AI worker crashed'));
+                worker.onerror = () => this.failAllOn(worker, new Error('AI 워커가 다운되었습니다'));
                 this.workers.push(worker);
             }
             this.idle = [...this.workers];
@@ -95,7 +95,7 @@ export class SimWorkerPool implements SimJobRunner {
         this.idle.push(worker);
 
         if (message.kind === 'done') pending.resolve(message.children);
-        else pending.reject(new Error(message?.message ?? 'AI worker failed'));
+        else pending.reject(new Error(message?.message ?? 'AI 워커 실패'));
 
         this.pump();
     }
@@ -130,7 +130,7 @@ export class SimWorkerPool implements SimJobRunner {
 
     // Run every job, returning results in the SAME ORDER as the input.
     async run(jobs: SimJob[], config: SimJobConfig): Promise<SimJobChild[][]> {
-        if (!this.snapshot) throw new Error('SimWorkerPool.run before setSnapshot');
+        if (!this.snapshot) throw new Error('SimWorkerPool.run이 setSnapshot보다 먼저 실행되었습니다');
 
         if (!this.parallel) {
             // Identical work, on this thread. Yields between jobs so the

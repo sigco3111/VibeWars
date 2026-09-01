@@ -490,7 +490,7 @@ export function drivePlanner(gen: Generator<PlanProgress, TurnPlanResult>): Turn
 
 // Identical result to drivePlanner (same generator, same seeds), but
 // yields to the event loop between work units and reports progress -- so
-// the page can animate an "AI thinking" bar while the search runs on the
+// the page can animate an "AI 사고 중" bar while the search runs on the
 // main thread.
 export async function drivePlannerAsync(
     gen: Generator<PlanProgress, TurnPlanResult>,

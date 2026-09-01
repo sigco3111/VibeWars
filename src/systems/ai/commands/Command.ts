@@ -3,7 +3,7 @@ import type { GameState } from '../../GameState';
 class Command {
     constructor() {
         if (this.constructor === Command) {
-            throw new Error("Command is an abstract class");
+            throw new Error("Command는 추상 클래스입니다");
         }
     }
 

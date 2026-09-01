@@ -82,7 +82,7 @@ export async function beamPlanParallel(
     // identically in beam.ts so no engine can exist that only one planner
     // can run.
     if (spread && beam.dedupeChildren) {
-        throw new Error('beam.dedupeChildren and beam.spreadWorst are mutually exclusive');
+        throw new Error('beam.dedupeChildren와 beam.spreadWorst는 동시에 사용할 수 없습니다');
     }
 
     const hasUnits = [...snapshot.liveUnits()].some(([, u]) => u.playerIndex === playerIndex);

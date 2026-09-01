@@ -8,7 +8,7 @@ export function setGameState(state: GameState): void {
 
 export function getGameState(): GameState {
     if (!currentGameState) {
-        throw new Error('GameState accessed before initGame() has run');
+        throw new Error('GameState가 initGame() 실행 전에 접근되었습니다');
     }
     return currentGameState;
 }

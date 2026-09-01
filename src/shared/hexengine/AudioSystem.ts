@@ -91,7 +91,7 @@ class AudioSystem {
             const audioBuffer = await this.audioContext!.decodeAudioData(arrayBuffer);
             this.sounds.set(name, audioBuffer);
         } catch (error) {
-            console.error(`Error loading sound ${name}:`, error);
+            console.error(`사운드 로딩 오류 ${name}:`, error);
         }
     }
 
@@ -121,7 +121,7 @@ class AudioSystem {
             };
 
         } catch (error) {
-            console.error('Error loading music:', error);
+            console.error('음악 로딩 오류:', error);
         }
     }
 

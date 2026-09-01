@@ -20,7 +20,7 @@ import { SunSystem } from './shared/hexengine/SunSystem';
 import { TREE_PRESETS, type TreePreset } from './treePresets';
 
 const host = document.querySelector<HTMLElement>('#viewer');
-if (!host) throw new Error('Tree viewer host is missing');
+if (!host) throw new Error('나무 뷰어 호스트가 없습니다');
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x172019);
@@ -188,7 +188,7 @@ const statCrowns = document.querySelector<HTMLElement>('#stat-crowns');
 const statGenerations = document.querySelector<HTMLElement>('#stat-generations');
 const statDrawCalls = document.querySelector<HTMLElement>('#stat-draw-calls');
 const statSize = document.querySelector<HTMLElement>('#stat-size');
-const numberFormat = new Intl.NumberFormat('sv-SE');
+const numberFormat = new Intl.NumberFormat('ko-KR');
 
 function updateTreeStats(model: any, bounds: any): void {
     let triangles = 0;

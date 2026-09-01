@@ -32,7 +32,7 @@ class PathIndicatorSystem {
                 },
                 undefined,
                 (err: any) => {
-                    console.error('Error loading path texture:', err);
+                    console.error('경로 텍스처 로딩 오류:');
                     reject(err);
                 }
             );

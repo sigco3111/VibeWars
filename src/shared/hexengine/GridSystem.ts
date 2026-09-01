@@ -225,7 +225,7 @@ class GridSystem {
                 },
                 undefined,
                 (error: any) => {
-                    console.error(`Error loading texture ${path}:`, error);
+                    console.error(`텍스처 로딩 오류 ${path}:`, error);
                 }
             );
         }

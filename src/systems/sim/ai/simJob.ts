@@ -85,7 +85,7 @@ export interface SimJob {
     // away 99.8% of it -- 1900 children per job, each carrying a full event
     // array, structured-cloned on both sides, sorted, and discarded down to
     // a handful. The deserialize is what shows up as main-thread long tasks
-    // during "AI thinking" even though the search itself runs off-thread.
+    // during "AI 사고 중" even though the search itself runs off-thread.
     keep?: SimJobKeep;
 }
 

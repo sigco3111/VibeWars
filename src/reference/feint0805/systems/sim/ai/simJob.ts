@@ -77,7 +77,7 @@ export interface SimJob {
     // away 99.8% of it -- 1900 children per job, each carrying a full event
     // array, structured-cloned on both sides, sorted, and discarded down to
     // a handful. The deserialize is what shows up as main-thread long tasks
-    // during "AI thinking" even though the search itself runs off-thread.
+    // during "AI 사고 중" even though the search itself runs off-thread.
     keep?: SimJobKeep;
 }
 
@@ -139,7 +139,7 @@ export function runSimJob(snapshot: SimState, job: SimJob, config: SimJobConfig 
     if (job.dedupe && job.meta) {
         // Dedup compares event logs and metadata mode ships none. The
         // planners refuse the flag combination too; this is the backstop.
-        throw new Error('SimJob.dedupe and SimJob.meta are mutually exclusive');
+        throw new Error('SimJob.dedupe와 SimJob.meta는 동시에 사용할 수 없습니다');
     }
 
     const first = job.startIndex ?? 0;

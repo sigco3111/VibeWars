@@ -54,7 +54,7 @@ function isRepairable(state: SimState, healerIndex: number, targetIndex: number,
 }
 
 // The ally that would absorb the most of the heal, tie-broken by lowest hp.
-// "Save the weakest" -- the same logic the attack gene's target picker uses
+// "가장 약한 유닛 살리기" -- the same logic the attack gene's target picker uses
 // on the other side of the board.
 function bestRepairTarget(state: SimState, healerIndex: number, skill: SkillDef): number | null {
     let best: number | null = null;
