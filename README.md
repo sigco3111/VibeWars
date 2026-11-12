@@ -8,6 +8,10 @@
 
 ---
 
+## 📸 실제 실행 화면
+
+![바이브 워즈 실제 화면](16-VibeWars.jpg)
+
 ## 🌐 라이브 데모
 
 **라이브 데모 : https://sigco3111.github.io/VibeWars/**
